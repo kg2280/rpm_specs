@@ -24,6 +24,7 @@ zcat $RPM_SOURCE_DIR/modulis-opensips-1_11.tar.gz | tar -xvf -
 
 %build
 cd $RPM_BUILD_DIR/modulis-opensips-1_11*
+git checkout 9ce6c4abfc3ec7c180443c4
 sed -i '69i #include <unistd.h>' cfg.lex
 sed -i '38i #include "../../strcommon.h"' modules/mi_xmlrpc_ng/http_fnc.c
 
