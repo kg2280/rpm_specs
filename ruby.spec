@@ -98,3 +98,6 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Jan 2 2011 Ian Meyer <ianmmeyer@gmail.com> - 1.9.2-p136-1
 - Initial spec to replace system ruby with 1.9.2-p136
 
+%post
+echo gem: --no-ri --no-rdoc >> ~/.gemrc
+
