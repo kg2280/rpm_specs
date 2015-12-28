@@ -38,7 +38,6 @@ cd $RPM_BUILD_ROOT/opt/opensips/etc/opensips
 ./scripts/afterbuild.sh
 git fetch origin
 git checkout v41
-#git checkout 9ce6c4abfc3ec7c180443c4
 mkdir -p $RPM_BUILD_ROOT/etc/default/ $RPM_BUILD_ROOT/etc/init.d/
 cp $RPM_BUILD_DIR/modulis-opensips-1_11/packaging/rpm/opensips.default $RPM_BUILD_ROOT/etc/default/opensips
 cp $RPM_BUILD_DIR/modulis-opensips-1_11/packaging/rpm/opensips.init $RPM_BUILD_ROOT/etc/init.d/opensips
