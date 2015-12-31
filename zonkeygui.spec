@@ -35,4 +35,11 @@ git clone --depth 2 git@github.com:modulis/zonkey.git -b $prod $RPM_BUILD_ROOT/v
 %post
 echo "export RAILS_ENV=production" >> ~/.bashrc
 source ~/.bashrc
-
+cp -R /var/www/zonkey/p_templates/ /etc/zonkey/ 
+mkdir /etc/zonkey/config
+cp /var/www/zonkey/config/custom_conf.yml /etc/zonkey/config/custom_conf.yml
+cp /var/www/zonkey/config/provisioning.yml /etc/zonkey/config/
+cp /var/www/zonkey/config/opensips.yml /etc/zonkey/config/
+cp /var/www/zonkey/config/asterisk-ajam.yml /etc/zonkey/config/
+cp /var/www/zonkey/config/sms.yml /etc/zonkey/config/sms.yml
+chown -R apache. /etc/zonkey
