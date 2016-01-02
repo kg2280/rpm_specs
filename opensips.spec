@@ -1,7 +1,7 @@
 Summary: Modulis build of Opensips
 Name: modulis-opensips
 Version: 1_11
-Release: 1
+Release: 2
 License: GPL
 Group: Applications/VoIP
 Source: modulis-opensips-1_11.tar.gz
@@ -24,6 +24,7 @@ zcat $RPM_SOURCE_DIR/modulis-opensips-1_11.tar.gz | tar -xvf -
 
 %build
 cd $RPM_BUILD_DIR/modulis-opensips-1_11*
+cp /home/modulis/rpmbuild/SPECS/rpm_specs/opensips_Makefile.conf Makefile.conf
 git checkout 9ce6c4abfc3ec7c180443c4
 sed -i '69i #include <unistd.h>' cfg.lex
 sed -i '38i #include "../../strcommon.h"' modules/mi_xmlrpc_ng/http_fnc.c
@@ -31,7 +32,9 @@ sed -i '38i #include "../../strcommon.h"' modules/mi_xmlrpc_ng/http_fnc.c
 TLS=1 make
 
 %install
-TLS=1 make install 
+TLS=1 make install basedir=$RPM_BUILD_ROOT \
+		prefix=/opt/opensips \
+
 rm -rf $RPM_BUILD_ROOT/opt/opensips/etc/opensips
 git clone git@github.com:modulis/opensips-zonkey.git -b master $RPM_BUILD_ROOT/opt/opensips/etc/opensips
 cd $RPM_BUILD_ROOT/opt/opensips/etc/opensips
@@ -45,8 +48,7 @@ cp $RPM_BUILD_DIR/modulis-opensips-1_11/packaging/rpm/opensips.init $RPM_BUILD_R
 %files
 %defattr(-,root,root,-)
 %doc README
-/opt/opensips/etc/opensips/*
-/opt/opensips/etc/opensips/.*
+/opt/opensips/*
 /etc/default/opensips
 /etc/init.d/opensips
 
@@ -55,6 +57,7 @@ cp $RPM_BUILD_DIR/modulis-opensips-1_11/packaging/rpm/opensips.init $RPM_BUILD_R
 %post
 depmod -a
 mkdir -p /etc/zonkey/opensips/
+sed -i 's#path=$CHROOT_DIR/tmp/$name#path=/opt/opensips/run/$name#' /opt/opensips/lib64/opensips/opensipsctl/opensipsctl.fifo
 cp -R /opt/opensips/etc/opensips/customconf/* /etc/zonkey/opensips/
 rm -f /opt/opensips/etc/opensips/opensipsctlrc
 cp -f /opt/opensips/etc/opensips/opensipsctlrc.zonkey /opt/opensips/etc/opensips/opensipsctlrc
