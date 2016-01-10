@@ -41,23 +41,27 @@ git clone git@github.com:modulis/asterisk-su-zonkey.git $RPM_BUILD_ROOT/etc/aste
 %files
 %defattr(-,root,root,-)
 %doc README
+/etc/asterisk
 /etc/logrotate.d/asterisk
-/etc/asterisk/*
-/etc/asterisk/.*
+/usr/include/asterisk
 /usr/include/asterisk.h
-/usr/include/asterisk/*
+/usr/lib/asterisk
 /usr/lib/libasteriskssl.so
 /usr/lib/libasteriskssl.so.1
-/usr/lib/asterisk/*
-/usr/sbin/ast*
+/usr/sbin/astcanary
+/usr/sbin/astdb2bdb
+/usr/sbin/astdb2sqlite3
+/usr/sbin/asterisk
+/usr/sbin/astgenkey
 /usr/sbin/autosupport
 /usr/sbin/rasterisk
 /usr/sbin/safe_asterisk
-/usr/share/man/man8/*
-/var/lib/asterisk/*
-/var/log/asterisk/*
-/var/run/asterisk/
-/var/spool/asterisk/*
+/usr/share/man/man8/asterisk.8.gz
+/usr/share/man/man8/astgenkey.8.gz
+/usr/share/man/man8/autosupport.8.gz
+/usr/share/man/man8/safe_asterisk.8.gz
+/var/lib/asterisk
+/var/spool/asterisk
 
 
 %changelog
@@ -66,8 +70,8 @@ git clone git@github.com:modulis/asterisk-su-zonkey.git $RPM_BUILD_ROOT/etc/aste
 ldconfig
 useradd -d /var/run/asterisk/ -M -c "Asterisk PBX user" -r -U -s /sbin/nologin asterisk
 test -d /etc/zonkey || mkdir /etc/zonkey/
-cp -R /etc/asterisk/etc_zonkey/asterisk /etc/zonkey/
-rsync -av /etc/asterisk/etc_zonkey/bin/ /etc/zonkey/bin
+cp -R /etc/asterisk/CUSTOMCONF/asterisk_config /etc/zonkey/asterisk
+rsync -av /etc/asterisk/CUSTOMCONF/bin/ /etc/zonkey/bin
 chown -R asterisk. /var/run/asterisk/ /var/lib/asterisk/ /var/log/asterisk/ /var/spool/asterisk/ /usr/lib/asterisk/ /etc/zonkey/asterisk /dev/dahdi
 chown --recursive root:asterisk /etc/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/lib/asterisk
