@@ -1,0 +1,36 @@
+From b0a66b1fcefdc0758dc221b3c06c9d69b4461cc4 Mon Sep 17 00:00:00 2001
+From: root <root@lero01.(none)>
+Date: Fri, 29 May 2015 14:10:04 -0400
+Subject: [PATCH 1/1] odbc mwi fix
+
+---
+ src/sccp_mwi.c |   17 +++++++++++++++--
+ 1 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/src/sccp_mwi.c b/src/sccp_mwi.c
+index f45a376..504a741 100644
+--- a/src/sccp_mwi.c
++++ b/src/sccp_mwi.c
+@@ -473,6 +473,19 @@ void sccp_mwi_setMWILineStatus(sccp_linedevices_t * lineDevice)
+ 
+ 	/* when l is defined we are switching on/off the button icon */
+ 	if (l) {
++                // HACK START
++                sccp_mailbox_t *mailbox = NULL;
++                SCCP_LIST_LOCK(&l->mailboxes);
++                char buffer[513];
++                SCCP_LIST_TRAVERSE(&l->mailboxes, mailbox, list) {
++                        sprintf(buffer, "%s@%s", mailbox->mailbox, mailbox->context);
++                        sccp_log((DEBUGCAT_MWI)) (VERBOSE_PREFIX_3 "SCCP: (mwi_checkLine) Line: %s, Mailbox: %s\n", l->name, buffer);
++                }   
++                SCCP_LIST_UNLOCK(&l->mailboxes);
++                pbx_app_inboxcount(buffer, &l->voicemailStatistic.newmsgs, &l->voicemailStatistic.oldmsgs);
++                pbx_log(LOG_NOTICE, "Update mailbox %s new: %d, old: %d\n",buffer,l->voicemailStatistic.newmsgs,l->voicemailStatistic.oldmsgs); 
++
++                // HACK END
+ 		instance = lineDevice->lineInstance;
+ 		status = l->voicemailStatistic.newmsgs ? 1 : 0;
+ 	}
+-- 
+1.7.1
+
